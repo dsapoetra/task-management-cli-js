@@ -1,35 +1,66 @@
 import chalk from "chalk";
 import inquirer from "inquirer";
-import { getTasks } from "./add-task.js";
+import { getAll, deleteTask } from "../utils/db.js";
 
-// Add task function
 export const runDeleteTask = (returnToMainMenu) => {
+  const tasks = getAll();
+
+  if (tasks.length === 0) {
+    console.log(chalk.yellow("There are no tasks to delete."));
+    if (returnToMainMenu) {
+      returnToMainMenu();
+    }
+    return;
+  }
+
+  // Display existing tasks
+  console.log(chalk.blue("Existing tasks:"));
+  tasks.forEach(task => {
+    console.log(chalk.cyan(`ID: ${task.id} - Name: ${task.task.name}`));
+  });
+
   inquirer
     .prompt([
       {
-        type: "input",
-        name: "taskName",
-        message: "What's the task to be deleted?",
+        type: "number",
+        name: "taskId",
+        message: "Enter the ID of the task to be deleted:",
+        validate: (input) => {
+          if (tasks.some(task => task.id === input)) {
+            return true;
+          }
+          return "Please enter a valid task ID.";
+        }
       },
+      {
+        type: "confirm",
+        name: "confirmDelete",
+        message: "Are you sure you want to delete this task?",
+        default: false
+      }
     ])
     .then((answers) => {
-        const tasks = getTasks();
-      // Add the task to in-memory array (you can use your db or file storage here)
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i] === answers.taskName) {
-          tasks.splice(i, 1);
-          console.log(chalk.green(`Task deleted: ${answers.taskName}`));
-          console.log(chalk.blue(`You now have ${tasks.length} tasks.`));
-          break;
+      if (answers.confirmDelete) {
+        const taskToDelete = tasks.find(task => task.id === answers.taskId);
+        if (taskToDelete) {
+          deleteTask(answers.taskId);
+          console.log(chalk.green(`Task deleted: ${taskToDelete.task.name}`));
+          console.log(chalk.blue(`You now have ${getAll().length} tasks.`));
+        } else {
+          console.log(chalk.red("Task not found."));
         }
+      } else {
+        console.log(chalk.yellow("Task deletion cancelled."));
       }
-      // After adding task, return to the main menu
+
       if (returnToMainMenu) {
         returnToMainMenu();
       }
     })
     .catch((error) => {
-      console.error(chalk.red("An error occurred while adding the task."), error);
+      console.error(chalk.red("An error occurred while deleting the task."), error);
+      if (returnToMainMenu) {
+        returnToMainMenu();
+      }
     });
 };
-

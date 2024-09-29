@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import chalk from "chalk";
-import { getTasks } from "./add-task.js";
+import { getAll } from "../utils/db.js";
 
 export const runListTask = (returnToMainMenu) => {
   const program = new Command(); // Create a new instance of Command each time
@@ -9,17 +9,23 @@ export const runListTask = (returnToMainMenu) => {
     .version("1.0.0")
     .description("List of tasks")
     .action(() => {
-      // Simulate the action and print something
-      console.log(chalk.green(`Hey!`));
-        
-      // List task saved in memory by add-task.js
-        const tasks = getTasks();
-        console.log(chalk.blue(`You have ${tasks.length} tasks.`));
-        tasks.forEach((task, index) => {
-          console.log(chalk.blue(`${index + 1}. ${task}`));
+      console.log(chalk.green("Here are your tasks:"));
+      
+      // Get all tasks from the db
+      const tasks = getAll();
+      
+      if (tasks.length === 0) {
+        console.log(chalk.yellow("You have no tasks."));
+      } else {
+        console.log(chalk.blue(`You have ${tasks.length} tasks:`));
+        tasks.forEach((task) => {
+          console.log(chalk.cyan(`ID: ${task.id}`));
+          Object.entries(task.task).forEach(([key, value]) => {
+            console.log(chalk.white(`  ${key}: ${value}`));
+          });
+          console.log("---");
         });
-
-      // Optionally, you can access the name option here
+      }
 
       // After running the action, return to the main menu
       if (returnToMainMenu) {
