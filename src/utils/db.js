@@ -46,3 +46,15 @@ export const removeField = (id, key) => {
     entry.task.delete(key);
   }
 };
+
+export const updateTask = (id, updates) => {
+  if (data.has(id)) {
+      const task = data.get(id);
+      data.set(id, { ...task, ...updates });
+      return true;
+  }
+  return false;
+};
+
+// Usage
+updateTask(1, { status: 'completed', completedDate: '2023-09-30' });

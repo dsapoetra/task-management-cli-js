@@ -5,6 +5,7 @@ import { runBasicExample } from "../src/commands/basic-example.js";
 import { runAddTask } from "../src/commands/add-task.js";
 import { runListTask } from "../src/commands/list-task.js";
 import { runDeleteTask } from "../src/commands/delete-task.js";
+import { runUpdateTask } from "../src/commands/update-task.js";
 
 // Define your examples
 const examples = {
@@ -12,6 +13,7 @@ const examples = {
   "Add Task": runAddTask,
   "List Task": runListTask,
   "Delete Task": runDeleteTask,
+  "Update Task": runUpdateTask,
 };
 
 // Function to handle the prompt loop
