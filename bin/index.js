@@ -6,6 +6,7 @@ import { runAddTask } from "../src/commands/add-task.js";
 import { runListTask } from "../src/commands/list-task.js";
 import { runDeleteTask } from "../src/commands/delete-task.js";
 import { runUpdateTask } from "../src/commands/update-task.js";
+import { runMarkInProgressTask } from "../src/commands/mark-in-progress.js";
 
 // Define your examples
 const examples = {
