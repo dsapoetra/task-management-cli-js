@@ -1,6 +1,8 @@
 # Task Management CLI
 
 This is a simple Command Line Interface (CLI) for managing tasks, built with Node.js.
+Specification from https://roadmap.sh/projects/task-tracker
+
 
 ## Table of Contents
 
